@@ -1,14 +1,12 @@
 package fbIntegration;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import requestHandler.RequestQueue;
 public class Messages {
-    private static String fbAppKey;
+    private static String fbAppSecret;
     private static int profileId;
     private static String access_key;
 
-    public void setAppKey(String key) {
-        fbAppKey = key;
+    public void setAppSecret(String secret) {
+        fbAppSecret = secret;
     }
     public void setProfileId(int id) {
         profileId = id;
@@ -16,8 +14,8 @@ public class Messages {
     public void setAccessKey(String key) {
         access_key = key;
     }
-    public LinkedList getMessages() {
-        LinkedList messages = new LinkedList();
+    public RequestQueue getMessages() {
+        RequestQueue messages = new RequestQueue();
         return messages;
     }
 }
