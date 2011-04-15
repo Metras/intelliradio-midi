@@ -1,5 +1,5 @@
 package requestHandler;
-import java.util.Collection;
+
 import java.util.LinkedList;
 public class RequestQueue extends LinkedList {
     private RequestQueueItem firstNode;
