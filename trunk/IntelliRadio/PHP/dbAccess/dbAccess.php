@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @name dbAccess
  * @package IntelliRadio.dbAccess
@@ -8,13 +9,17 @@
  */
 require_once('db_params.inc');
 class dbAccess {
-	var $_connection; 
+	protected $_connection = null; 
+	protected $_nameQuote = null;
+	protected  $_hasQuoted = null;
+	protected $_cursor = null;
 	public $dbInstance;
 	private function __construct($host,$user,$password,$db) {
 		if ( !($this->_connection = @mysql_connect($host,$user,$password,true)) ) {
 			die('Unable to connect to database, recheck your DB server');	
 			mysql_select_db($db, $this->_connection); 
 		}
+		return $this;
 		
 	}
 	public static function getInstance() {
@@ -23,6 +28,24 @@ class dbAccess {
 		}
 		return $this->dbInstance;
 		
+	}
+	public function nameQuote($s)
+	{
+		$q = $this->_nameQuote;
+
+		if (strlen($q) == 1) {
+			return $q.$s.$q;
+		} else {
+			return $q{0}.$s.$q{1};
+		}
+	}
+	public function isQuoted($fieldName)
+	{
+		if ($this->_hasQuoted) {
+			return in_array($fieldName, $this->_quoted);
+		} else {
+			return true;
+		}
 	}
 	public function query()
 	{
@@ -35,21 +58,12 @@ class dbAccess {
 		if ($this->_limit > 0 || $this->_offset > 0) {
 			$sql .= ' LIMIT '.$this->_offset.', '.$this->_limit;
 		}
-		if ($this->_debug) {
-			$this->_ticker++;
-			$this->_log[] = $sql;
-		}
-		$this->_errorNum = 0;
-		$this->_errorMsg = '';
 		$this->_cursor = mysql_query($sql, $this->_connection);
 
 		if (!$this->_cursor) {
 			$this->_errorNum = mysql_errno($this->_connection);
 			$this->_errorMsg = mysql_error($this->_connection)." SQL=$sql";
 
-			if ($this->_debug) {
-				JError::raiseError(500, 'JDatabaseMySQL::query: '.$this->_errorNum.' - '.$this->_errorMsg);
-			}
 			return false;
 		}
 		return $this->_cursor;
