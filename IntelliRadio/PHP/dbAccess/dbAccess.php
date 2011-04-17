@@ -6,11 +6,11 @@
  * 
  * Class to handle database connections
  */
-public class dbAccess {
+class dbAccess {
+	var _connection; 
 	private __construct($host,$user,$password,$db) {
-		if ( !@mysql_connect($host,$user,$password,true) ) {
-			 
-			
+		if ( !($this->_connection = @mysql_connect($host,$user,$password,true)) ) {
+			die('Unable to connect to database, recheck your DB server');	 
 		}
 		
 		
