@@ -7,6 +7,7 @@ class User {
 	var $userId;
 	var $userName;
 	var $userGroup;
+	var $loggedIn;
 	/**
 	 * 
 	 * Instantiates a new User object
