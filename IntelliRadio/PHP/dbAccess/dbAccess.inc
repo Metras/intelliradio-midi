@@ -13,6 +13,8 @@ class dbAccess {
 	protected $_nameQuote = null;
 	protected  $_hasQuoted = null;
 	protected $_cursor = null;
+	protected $_sql = null;
+	protected $_nameQuote = '`';
 	public $dbInstance;
 	private function __construct($host,$user,$password,$db) {
 		if ( !($this->_connection = @mysql_connect($host,$user,$password,true)) ) {
@@ -46,6 +48,9 @@ class dbAccess {
 		} else {
 			return true;
 		}
+	}
+	public function setQuery($query) {
+		$this->_sql = $query;
 	}
 	public function query()
 	{
