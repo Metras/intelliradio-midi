@@ -6,7 +6,13 @@
 class User {
 	var $userId;
 	var $userName;
-	var $userGroup;
+	/*
+	 * Container the user belongs to
+	 */
+	var $container;
+	/*
+	 * Boolean value to check whether user is logged in
+	 */
 	var $loggedIn;
 	/**
 	 * 
@@ -15,11 +21,12 @@ class User {
 	 * @param $userName String the username
 	 * @param $userGroup int user group id (based on user container)
 	 */
-	function instantiateUser($userId, $userName, $userGroup) {
+	static function instantiateUser($userId, $userName, $container) {
 		$user = new User();
 		$user->userId = $userId;
 		$user->userName = $userName;
-		$user->userGroup = $userGroup;
+		$user->container = $container;
 		return $user;
 	}
+	
 }

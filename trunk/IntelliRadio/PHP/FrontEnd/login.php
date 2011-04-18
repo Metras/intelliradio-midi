@@ -12,12 +12,10 @@ $loginParam = $_SESSION['user']->loggedIn;
 		
 
             <form name="chooser" action="index.php?page=login&loginAttempt=true" method="POST">
-                <p align="center" class="main_nav">&nbsp;</p>
-                <p align="center"><span class="style3">Username</span> :
+                Username :
                     <input type="text" name="username" />
                 </p>
-                <p align="center"><br/>
-                    <span class="style3">Password</span>       :
+                Password      :
                     <input type="password" name="password" />
 
                 </p>
@@ -37,7 +35,7 @@ $loginParam = $_SESSION['user']->loggedIn;
 <?php
 
 if($_GET['loginAttempt']==true) {
-
+	
    
 }
 
