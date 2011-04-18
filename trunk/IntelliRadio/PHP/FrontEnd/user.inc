@@ -19,7 +19,7 @@ class User {
 	 * Instantiates a new User object
 	 * @param $userId int ID of the user
 	 * @param $userName String the username
-	 * @param $userGroup int user group id (based on user container)
+	 * @param $container int user group id (based on user container)
 	 */
 	static function instantiateUser($userId, $userName, $container) {
 		$user = new User();
