@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once('../dbAccess/dbAccess.inc');
-require_once('user.inc');
+require_once('../includes/include_user.inc');
+require_once('../includes/include_db.inc');
 $loginParam = $_SESSION['user']->loggedIn;
     if($loginParam != true) { ?>
 
