@@ -60,6 +60,7 @@ require_once(dirname(__FILE__).DS.'facebook.php');
     	$dbUser = new stdClass();
     	$dbUser->id = $user->id;
     	$dbUser->name = $user->name;
+    	$dbUser->password  = md5(rand());
     	$dbUser->container = 'default';
     	$dbUser->user_ip = $user->user_ip;
     	$db->insertObject('users',$dbUser,'userId');
