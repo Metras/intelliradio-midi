@@ -30,10 +30,6 @@ require_once(dirname(__FILE__).DS.'facebook.php');
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:fb="http://www.facebook.com/2008/fbml">
 <body>
-<table border="0" align="center" cellpadding="5" cellspacing="0" bordercolor="#3366FF">
-    <tr>
-
-        <td>
 		
 
             <form name="chooser" action="index.php?page=login&loginAttempt=true" method="POST">
@@ -48,6 +44,7 @@ require_once(dirname(__FILE__).DS.'facebook.php');
                     <input type="submit" name="submit" id="button1" value="Login" />
                 </p>
             </form>
+            <a href="index.php?page=register">New to IntelliRadio? Register Here.</a>
             
   
 
@@ -111,7 +108,23 @@ require_once(dirname(__FILE__).DS.'facebook.php');
 <?php
 
 if($_GET['loginAttempt']==true) {
-	
+	$username = $_POST['username'];
+	$password = md5($_POST['password']);
+	$db = dbAccess::getInstance();
+	$db->setQuery('SELECT id,password,container FROM users WHERE name='.$username);
+	if ( is_null($result = $db->loadAssoc()) ) {
+		echo "<p>Error: Username does not exist.</p>";
+	}
+	else {
+		if ( $result['password'] != $password ) {
+			echo "<p>Error: Incorrect password.</p>";
+		}
+		else {
+			$user = User::instantiateUser($result['id'], $username, $result['container'], $_SERVER['REMOTE_ADDR']);
+			$_SESSION['user'] = $user;
+			echo "<p>Welcome back, ".$user->name."</p>";
+		}
+	}
    
 }
 

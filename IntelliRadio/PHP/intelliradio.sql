@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.7deb3build0.10.10.1
+-- version 3.3.7deb5build0.10.10.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 20, 2011 at 08:40 AM
+-- Generation Time: Apr 20, 2011 at 10:51 PM
 -- Server version: 5.1.49
 -- PHP Version: 5.3.3-1ubuntu9.3
 
@@ -26,16 +26,19 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `containers` (
-  `container_id` int(10) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(40) NOT NULL,
   `current_users` int(10) NOT NULL COMMENT 'The number of users who currently belong to this container',
-  PRIMARY KEY (`container_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `containers`
 --
 
+INSERT INTO `containers` (`id`, `name`, `current_users`) VALUES
+(1, 'default', 0),
+(2, 'rock', 0);
 
 -- --------------------------------------------------------
 
