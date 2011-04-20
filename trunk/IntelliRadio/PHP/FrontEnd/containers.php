@@ -31,7 +31,7 @@ class Container {
 	 */
 	static function getContainer($name = 'default') {
 		$db = dbAccess::getInstance();
-		$db->setQuery('SELECT '.$db->nameQuote('container_id').' FROM '.$db->nameQuote('containers')
+		$db->setQuery('SELECT '.$db->nameQuote('id').' FROM '.$db->nameQuote('containers')
 						.' WHERE '.$db->nameQuote('name').' = '.$name); 
 		$id = $db->loadResult();
 		return new Container($id, $name); 
@@ -44,7 +44,7 @@ class Container {
 	 */
 	function getContainerUsers() {
 		$db = dbAccess::getInstance();
-		$db->setQuery('SELECT userId FROM users WHERE container = '.$this->name);
+		$db->setQuery('SELECT id FROM users WHERE container = '.$this->name);
 		$users = $db->loadResultArray();
 		return $users;
 	}
@@ -52,16 +52,19 @@ class Container {
 	 * 
 	 * Function to switch a given user's container
 	 * @param $user User User object to switch to the container
+	 * @return Boolean whether the user switch was successful
 	 */
 	function switchUserContainter($user) {
 		$user->container = $this->name;
 		$db = dbAccess::getInstance();
 		$userToDb = new stdClass();
-		$userToDb->userId = $user->id;
+		$userToDb->id = $user->id;
 		$userToDb->name = $user->name;
 		$userToDb->container = $user->container;
 		$userToDb->user_ip = $user->user_ip;
 		$db->updateObject('users', $userToDb, 'id');
+		$db->setQuery('UPDATE containers SET current_users=current_users+1 WHERE id='.$this->id);
+		return $db->loadResult();
 	}
 	
 	
