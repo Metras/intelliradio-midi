@@ -43,7 +43,25 @@ class Container {
 	 * @return Array of userIds
 	 */
 	function getContainerUsers() {
-		
+		$db = dbAccess::getInstance();
+		$db->setQuery('SELECT userId FROM users WHERE container = '.$this->name);
+		$users = $db->loadResultArray();
+		return $users;
+	}
+	/**
+	 * 
+	 * Function to switch a given user's container
+	 * @param $user User User object to switch to the container
+	 */
+	function switchUserContainter($user) {
+		$user->container = $this->name;
+		$db = dbAccess::getInstance();
+		$userToDb = new stdClass();
+		$userToDb->userId = $user->id;
+		$userToDb->name = $user->name;
+		$userToDb->container = $user->container;
+		$userToDb->user_ip = $user->user_ip;
+		$db->updateObject('users', $userToDb, 'id');
 	}
 	
 	

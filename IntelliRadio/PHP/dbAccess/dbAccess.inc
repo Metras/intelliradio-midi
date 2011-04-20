@@ -1,13 +1,14 @@
 <?php
 
+
+require_once('db_params.inc');
 /**
  * @name dbAccess
  * @package IntelliRadio.dbAccess
  * @author Ramindu Deshapriya
  * 
- * Class to handle database connections
+ * @desc Class to handle database connections
  */
-require_once('db_params.inc');
 class dbAccess {
 	protected $_connection = null; 
 	protected $_nameQuote = null;
@@ -26,7 +27,7 @@ class dbAccess {
 	}
 	public static function getInstance() {
 		if ( is_null($this->dbInstance) ) {
-			$this->dbInstance = $this->__construct($_DB['host'], $_DB['user'], $_DB['password'], $_DB['database']);
+			$this->dbInstance = new dbAccess($_DB['host'], $_DB['user'], $_DB['password'], $_DB['database']);
 		}
 		return $this->dbInstance;
 		
@@ -49,8 +50,16 @@ class dbAccess {
 			return true;
 		}
 	}
-	public function setQuery($query) {
-		$this->_sql = $query;
+	/**
+	 * 
+	 * Set a database query for execution
+	 * @param $query String Query to be executed
+	 */
+	function setQuery( $sql, $offset = 0, $limit = 0)
+	{
+		$this->_sql		= $sql;
+		$this->_limit	= (int) $limit;
+		$this->_offset	= (int) $offset;
 	}
 	public function query()
 	{
