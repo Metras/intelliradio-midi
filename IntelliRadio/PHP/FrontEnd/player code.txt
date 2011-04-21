@@ -1,0 +1,11 @@
+<center>
+<object id="myMovie" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="150" height="36">
+<param name="src" value="rtsp://localhost/broadcast/live.3gp">
+<param name="console" value="video2">
+<param name="controls" value="ControlPanel">
+<param name="autostart" value="false">
+<param name="loop" value="false">
+<embed name="myMovie" src="http://localhost/ramgen/broadcast/live.3gp?embed" height="36" width="150" autostart="false" loop="false" nojava="true" console="video2" controls="ControlPanel"></embed>
+<noembed><a href="http://realmedia.uic.edu/ramgen/itltv/bbtips.6feb02.smi">Play second clip</a></noembed>
+</object>
+</center>
