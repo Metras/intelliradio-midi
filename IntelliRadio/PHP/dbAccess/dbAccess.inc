@@ -1,9 +1,5 @@
 <?php
-$dParams = array();
-$dParams['host'] 		= 'localhost';
-$dParams['user'] 		= 'root';
-$dParams['password'] 	= 'rami';
-$dParams['database'] 	= 'intelliradio';
+require_once 'db_params.inc';
 /**
  * @name dbAccess
  * @package IntelliRadio.dbAccess
@@ -17,7 +13,7 @@ class dbAccess {
 	protected  $_hasQuoted = null;
 	protected $_cursor = null;
 	protected $_sql = null;
-	protected $_nameQuote = '`';
+	//protected $_nameQuote = '`';
 	public $dbInstance;
 	private function __construct($host,$user,$password,$db) {
 		if ( !($this->_connection = @mysql_connect($host,$user,$password,true)) ) {
