@@ -1,7 +1,9 @@
 <?php
-
-
-require_once('db_params.inc');
+$dParams = array();
+$dParams['host'] 		= 'localhost';
+$dParams['user'] 		= 'root';
+$dParams['password'] 	= 'rami';
+$dParams['database'] 	= 'intelliradio';
 /**
  * @name dbAccess
  * @package IntelliRadio.dbAccess
@@ -27,7 +29,7 @@ class dbAccess {
 	}
 	public static function getInstance() {
 		if ( is_null($this->dbInstance) ) {
-			$this->dbInstance = new dbAccess($_DB['host'], $_DB['user'], $_DB['password'], $_DB['database']);
+			$this->dbInstance = new dbAccess($dParams['host'], $dParams['user'], $dParams['password'], $dParams['database']);
 		}
 		return $this->dbInstance;
 		

@@ -1,3 +1,5 @@
+<?php session_start(); 
+require_once('../includes/include_functions.inc');?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en">
 <head>
@@ -36,14 +38,14 @@
                 	<div class="r"></div>
                 	<ul class="art-menu">
                 		<li>
-                			<a href="#" class="active"><span class="l"></span><span class="r"></span><span class="t">Home</span></a>
+                			<a href="index.php?page=home" class="active"><span class="l"></span><span class="r"></span><span class="t">Home</span></a>
                 		</li>
                 		<li>
-                			<a href="#"><span class="l"></span><span class="r"></span><span class="t">Login</span></a>
+                			<a href="index.php?page=login"><span class="l"></span><span class="r"></span><span class="t">Login</span></a>
                 			
                 		</li>		
                 		<li>
-                			<a href="#"><span class="l"></span><span class="r"></span><span class="t">About IntelliRadio</span></a>
+                			<a href="index.php?page=about"><span class="l"></span><span class="r"></span><span class="t">About IntelliRadio</span></a>
                 		</li>
                 	</ul>
                 </div>
@@ -75,13 +77,13 @@
                                             <!-- block-content -->
                                                             <ul class="art-vmenu">
                                                             	<li>
-                                                            		<a href="page.html?i1"><span class="l"></span><span class="r"></span><span class="t">Home</span></a>
+                                                            		<a href="index.php?page=home"><span class="l"></span><span class="r"></span><span class="t">Home</span></a>
                                                             	</li>
                                                             	<li>
-                                                            		<a href="page.html?i2"><span class="l"></span><span class="r"></span><span class="t">Facebook</span></a>
+                                                            		<a href="index.php?page=fb"><span class="l"></span><span class="r"></span><span class="t">Facebook</span></a>
                                                             			</li>
                                                             	<li class="active">
-                                                            		<a class="active" href="page.html?i3"><span class="l"></span><span class="r"></span><span class="t">Search</span></a>
+                                                            		<a class="active" href="index.php?page=login"><span class="l"></span><span class="r"></span><span class="t">Search</span></a>
                                                             	</li>
                                                             </ul>
                                             <!-- /block-content -->
@@ -133,7 +135,7 @@
                                             <div class="art-blockheader">
                                                 <div class="l"></div>
                                                 <div class="r"></div>
-                                                 <div class="t">Channels</div>
+                                                 <div class="t">Containers</div>
                                             </div>
                                             <div class="art-blockcontent">
                                                 <div class="art-blockcontent-tl"></div>
@@ -211,62 +213,19 @@
                                             <div class="art-postmetadataheader">
                                                 <h2 class="art-postheader">
                                                     <img src="images/postheadericon.png" width="26" height="26" alt="postheadericon" />
-                                                    Now Playing
+                                                    <?php echo 'Welcome!'; ?>
                                                 </h2>
                                             </div>
                                             <div class="art-postcontent">
-                                                <!-- article-content -->
+                                                <?php 
+                                                	$namesAndPages = array('login' => 'login.php',
+                                                						   'about' => 'about.php',
+                                                						   'fb'    => 'fb.php');
+                                                	midiInclude($_GET['page'], $namesAndPages);
+                                                ?>
                                                 
                                                 
-                                                <!--<p>Lorem ipsum dolor sit amet,
-                                                <a href="#" title="link">link</a>, <a class="visited" href="#" title="visited link">visited link</a>,
-                                                 <a class="hover" href="#" title="hovered link">hovered link</a> consectetuer
-                                                adipiscing elit. Quisque sed felis. Aliquam sit amet felis. Mauris semper,
-                                                velit semper laoreet dictum, quam diam dictum urna, nec placerat elit nisl
-                                                in quam. Etiam augue pede, molestie eget, rhoncus at, convallis ut, eros.</p>
-                                                <p>
-                                                	<span class="art-button-wrapper">
-                                                		<span class="l"> </span>
-                                                		<span class="r"> </span>
-                                                		<a class="art-button" href="javascript:void(0)">Read more...</a>
-                                                	</span>
-                                                </p>-->
-                                                <div class="cleared"></div>
-                                              <!--  <div class="art-content-layout overview-table">
-                                                	<div class="art-content-layout-row">
-                                                		<div class="art-layout-cell">
-                                                      <div class="overview-table-inner">
-                                                	      <h4>Support</h4>
-                                                						  <img src="images/01.png" width="55px" height="55px" alt="an image" class="image" />
-                                                						  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                                                						  Quisque sed felis. Aliquam sit amet felis. Mauris semper,
-                                                						  velit semper laoreet dictum, quam diam dictum urna. </p>
-                                                       </div>
-                                                		</div>
-                                                		<div class="art-layout-cell">
-                                                    <div class="overview-table-inner">
-                                                		  <h4>Development</h4>
-                                                						  <img src="images/02.png" width="55px" height="55px" alt="an image" class="image" />
-                                                						  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                                                						  Quisque sed felis. Aliquam sit amet felis. Mauris semper,
-                                                						  velit semper laoreet dictum, quam diam dictum urna. </p>
-                                                				</div>
-                                                		</div>
-                                                		<div class="art-layout-cell">
-                                                    <div class="overview-table-inner">
-                                                		  <h4>Strategy</h4>
                                                 
-                                                						  <img src="images/03.png" width="55px" height="55px" alt="an image" class="image" />
-                                                						  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-                                                						  Quisque sed felis. Aliquam sit amet felis. Mauris semper,
-                                                						  velit semper laoreet dictum, quam diam dictum urna. </p>
-                                                              </div>
-                                                		</div>
-                                                	</div> 
-                                                </div>
-                                                    
-                                                
-                                            </div>-->
                                             <div class="cleared"></div>
                             </div>
                             
