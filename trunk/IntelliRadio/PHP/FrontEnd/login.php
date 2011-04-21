@@ -4,14 +4,9 @@ require_once('../includes/include_user.inc');
 
 require_once('../includes/include_db.inc');
 require_once('facebook.php');
-echo 'db included';
-
 $user = $_SESSION['user'];
-
-$loginParam = $user->loggedIn; 
-
-
-		// Create our Application instance (replace this with your appId and secret).
+$loginParam = $user; 
+// Create our Application instance (replace this with your appId and secret).
 		$facebook = new Facebook(array(
   										'appId'  => '195495487137724',
   										'secret' => '5cfac41ccd9679c8e03eaaa387b01cd8',
@@ -30,9 +25,14 @@ $loginParam = $user->loggedIn;
 				error_log($e);
 			}
 		}
-		$data = array('session' => $session, 'me' => $me, 'facebook' => $facebook);
+		$logoutUrl = $facebook->getLogoutUrl();
 		
-    if($loginParam != true) { ?>
+  		$loginUrl = $facebook->getLoginUrl();
+		$data = array('session' => $session, 'me' => $me, 'facebook' => $facebook); 
+
+		
+    if( is_null($loginParam) ) { ?>
+    
  	 <script>
       window.fbAsyncInit = function() {
         FB.init({
@@ -61,21 +61,19 @@ $loginParam = $user->loggedIn;
             <form name="chooser" action="index.php?page=login&loginAttempt=true" method="POST">
                 Username :
                     <input type="text" name="username" />
-                </p>
+               
                 Password      :
                     <input type="password" name="password" />
 
-                </p>
+                
                 <p align="right">
                     <input type="submit" name="submit" id="button1" value="Login" />
                 </p>
             </form>
             <a href="index.php?page=register">New to IntelliRadio? Register Here.</a>
             
-  
-
-    <?php if ($me){ ?>
-	    <p>You are logged in through Facebook as <?php echo $me['name']; 
+  	<?php if ($me){ 
+	    echo '<p>You are logged in through Facebook as '.$me['name'].'</p>'; 
 	    $user = User::instantiateUser($me['id'], $me['name'], 'default',$_SERVER['REMOTE_ADDR']); 
 	    $_SESSION['user'] = $user;
 	    $db = &dbAccess::getInstance();
@@ -90,21 +88,17 @@ $loginParam = $user->loggedIn;
 	    	$db->insertObject('users',$dbUser,'userId');
 	    } else {
 	    	$user->container = $container;
-	    }?>.</p>
+	    }?>
     <a href="<?php echo $logoutUrl; ?>">
       <img src="http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif">
     </a>
     <?php } else { ?>
-      	<div>
-		<a href="<?php echo $loginUrl; ?>">
+      	<a href="<?php echo $loginUrl; ?>">
 		<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif">
 		</a>
-		</div>
     <?php } ?>
 
     <div id="fb-root"></div>
-    
-   
 
 
 <?php } else {
