@@ -217,7 +217,8 @@ require_once('../includes/include_functions.inc');?>
                                                 <?php 
                                                 	$namesAndPages = array('login' => 'login.php',
                                                 						   'about' => 'about.php',
-                                                						   'fb'    => 'fb.php');
+                                                						   'fb'    => 'fb.php',
+                                                						   'home'  => 'dummy.php');
                                                 	midiInclude($_GET['page'], $namesAndPages);
                                                 ?>
                                                 
