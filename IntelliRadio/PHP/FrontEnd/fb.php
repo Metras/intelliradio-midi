@@ -1,4 +1,6 @@
 <?php
+require_once 'facebook.php';
+require_once '../includes/include_db.inc';
 // Create our Application instance (replace this with your appId and secret).
 		$facebook = new Facebook(array(
   										'appId'  => '195495487137724',
@@ -18,8 +20,15 @@
 				error_log($e);
 			}
 		}
+		if ($me) {
+		  $logoutUrl = $facebook->getLogoutUrl();
+		} else {
+		  $loginUrl = $facebook->getLoginUrl();
+		}
 		$data = array('session' => $session, 'me' => $me, 'facebook' => $facebook); ?>
-		
+	<!DOCTYPE html>
+	<html xmlns:fb="http://www.facebook.com/2008/fbml">
+	<body>
 		<script>
       window.fbAsyncInit = function() {
         FB.init({
@@ -62,15 +71,12 @@
 	    } else {
 	    	$user->container = $container;
 	    }?>.</p>
-    <a href="<?php echo $logoutUrl; ?>">
-      <img src="http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif">
-    </a>
+    
     <?php } else { ?>
       	<div>
-		<a href="<?php echo $loginUrl; ?>">
-		<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif">
-		</a>
+		<fb:login-button></fb:login-button>
 		</div>
     <?php } ?>
 
     <div id="fb-root"></div>
+    </body></html>

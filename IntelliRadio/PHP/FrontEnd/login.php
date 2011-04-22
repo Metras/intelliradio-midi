@@ -1,9 +1,9 @@
 <?php
 
 require_once('../includes/include_user.inc');
-
+require_once 'facebook.php';
 require_once('../includes/include_db.inc');
-require_once('facebook.php');
+
 $user = $_SESSION['user'];
 $loginParam = $user; 
 // Create our Application instance (replace this with your appId and secret).
@@ -25,15 +25,15 @@ $loginParam = $user;
 				error_log($e);
 			}
 		}
-		$logoutUrl = $facebook->getLogoutUrl();
-		
-  		$loginUrl = $facebook->getLoginUrl();
-		$data = array('session' => $session, 'me' => $me, 'facebook' => $facebook); 
+		if ($me) {
+		  $logoutUrl = $facebook->getLogoutUrl();
+		} else {
+		  $loginUrl = $facebook->getLoginUrl();
+		}
+		$data = array('session' => $session, 'me' => $me, 'facebook' => $facebook);
 
-		
     if( is_null($loginParam) ) { ?>
-    
- 	 <script>
+    	<script>
       window.fbAsyncInit = function() {
         FB.init({
           appId   : '<?php echo $facebook->getAppId(); ?>',
@@ -57,6 +57,7 @@ $loginParam = $user;
       }());
     </script>
 		
+		
 
             <form name="chooser" action="index.php?page=login&loginAttempt=true" method="POST">
                 Username :
@@ -70,36 +71,38 @@ $loginParam = $user;
                     <input type="submit" name="submit" id="button1" value="Login" />
                 </p>
             </form>
-            <a href="index.php?page=register">New to IntelliRadio? Register Here.</a>
-            
-  	<?php if ($me){ 
-	    echo '<p>You are logged in through Facebook as '.$me['name'].'</p>'; 
-	    $user = User::instantiateUser($me['id'], $me['name'], 'default',$_SERVER['REMOTE_ADDR']); 
-	    $_SESSION['user'] = $user;
-	    $db = &dbAccess::getInstance();
-	    $db->setQuery('SELECT name FROM users WHERE userId = '.$user->id);
-	    if ( !($container = $db->loadResult()) ) {
-	    	$dbUser = new stdClass();
-	    	$dbUser->id = $user->id;
-	    	$dbUser->name = $user->name;
-	    	$dbUser->password  = md5(rand());
-	    	$dbUser->container = 'default';
-	    	$dbUser->user_ip = $user->user_ip;
-	    	$db->insertObject('users',$dbUser,'userId');
-	    } else {
-	    	$user->container = $container;
-	    }?>
-    <a href="<?php echo $logoutUrl; ?>">
-      <img src="http://static.ak.fbcdn.net/rsrc.php/z2Y31/hash/cxrz4k7j.gif">
-    </a>
-    <?php } else { ?>
-      	<a href="<?php echo $loginUrl; ?>">
-		<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif">
-		</a>
-    <?php } ?>
-
-    <div id="fb-root"></div>
-
+            <a href="index.php?page=register">New to IntelliRadio? Register Here.</a><br/>
+            <!--<iframe src="fb.php" height="100" width="50%"></iframe>-->
+			
+			<?php if ($me){ ?>
+		    <p>You are logged in through Facebook as <?php echo $me['name']; 
+		    $user = User::instantiateUser($me['id'], $me['name'], 'default',$_SERVER['REMOTE_ADDR']); 
+		    $_SESSION['user'] = $user;
+		    $db = &dbAccess::getInstance();
+		    $db->setQuery('SELECT name FROM users WHERE userId = '.$user->id);
+		    if ( !($container = $db->loadResult()) ) {
+		    	$dbUser = new stdClass();
+		    	$dbUser->id = $user->id;
+		    	$dbUser->name = $user->name;
+		    	$dbUser->password  = md5(rand());
+		    	$dbUser->container = 'default';
+		    	$dbUser->user_ip = $user->user_ip;
+		    	$db->insertObject('users',$dbUser,'userId');
+		    } else {
+		    	$user->container = $container;
+		    }?>.</p>
+	    	<a href="<?php echo $loginUrl; ?>">
+			<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif" />
+			</a>
+	    <?php } else { ?>
+	      	<div>
+			<a href="<?php echo $loginUrl; ?>">
+			<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif">
+			</a>
+			</div>
+	    <?php } ?>
+	
+	    <div id="fb-root"></div>
 
 <?php } else {
 		echo "</p>You are already logged in as ".$user->name."</p>";
