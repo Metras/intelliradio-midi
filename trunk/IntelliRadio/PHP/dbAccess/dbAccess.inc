@@ -1,5 +1,4 @@
 <?php
-require_once 'db_params.inc';
 /**
  * @name dbAccess
  * @package IntelliRadio.dbAccess
@@ -8,27 +7,119 @@ require_once 'db_params.inc';
  * @desc Class to handle database connections
  */
 class dbAccess {
+	protected static $dParams = array(
+						'host' 		=> 'localhost',
+						'user' 		=> 'root',
+						'password' 	=> 'rami',
+						'database'	=> 'intelliradio'
+					);
+
+	
+	protected static $dParams1 = array(
+						'host' 		=> 'localhost',
+						'user' 		=> 'rdeshapr_ramindu',
+						'password' 	=> '181mihiri',
+						'database'	=> 'rdeshapr_radio'
+					);
+	
 	protected $_connection = null; 
-	protected $_nameQuote = null;
-	protected  $_hasQuoted = null;
-	protected $_cursor = null;
+	
+	
+	/**
+	 * The database driver name
+	 *
+	 * @var string
+	 */
 	protected $_sql = null;
-	//protected $_nameQuote = '`';
-	public $dbInstance;
-	private function __construct($host,$user,$password,$db) {
+
+	/**
+	 *  The null/zero date string
+	 *
+	 * @var string
+	 */
+	protected $_nullDate = '0000-00-00 00:00:00';
+
+	/**
+	 * Quote for named objects
+	 *
+	 * @var string
+	 */
+	protected $_nameQuote = '`';
+	protected static $dbInstance;
+	final private function __construct($host,$user,$password,$db) {
 		if ( !($this->_connection = @mysql_connect($host,$user,$password,true)) ) {
 			die('Unable to connect to database, recheck your DB server');	
-			mysql_select_db($db, $this->_connection); 
+			
 		}
+		mysql_select_db($db, $this->_connection); 
 		return $this;
 		
 	}
-	public static function getInstance() {
-		if ( is_null($this->dbInstance) ) {
-			$this->dbInstance = new dbAccess($dParams['host'], $dParams['user'], $dParams['password'], $dParams['database']);
+	final public static function getInstance() {
+		if ( is_null(dbAccess::$dbInstance) ) {
+			dbAccess::$dbInstance = new dbAccess(	dbAccess::$dParams['host'], 
+													dbAccess::$dParams['user'], 
+													dbAccess::$dParams['password'], 
+													dbAccess::$dParams['database']
+												);
 		}
-		return $this->dbInstance;
+		return dbAccess::$dbInstance;
 		
+	}
+	public function setQuery($query, $offset = 0, $limit = 0)
+	{
+		$this->_sql		= $query;
+		$this->_limit	= (int) $limit;
+		$this->_offset	= (int) $offset;
+
+		return $this;
+	}
+	/*
+	public function loadAssoc() {
+		if ( !($result = mysql_query($this->_sql)) ) {
+			return false;
+		}
+		return mysql_fetch_assoc($result);
+	}
+	/**
+	 * 
+	 * @desc Function to return single row, single column result
+	 *
+	public function loadResult() {
+		if ( !($result = mysql_query($this->_sql)) ) {
+			return false;
+		}
+		return mysql_result($result, 0);	
+	} */
+/**
+	 * Execute the query
+	 *
+	 * @return	mixed	A database resource if successful, FALSE if not.
+	 */
+	public function query()
+	{
+		if (!is_resource($this->_connection)) {
+			echo 'DB Connection not available';
+			return false;
+		}
+
+		// Take a local copy so that we don't modify the original query and cause issues later
+		$sql = (string) $this->_sql;
+		if ($this->_limit > 0 || $this->_offset > 0) {
+			$sql .= ' LIMIT '.$this->_offset.', '.$this->_limit;
+		}
+		$this->_errorNum = 0;
+		$this->_errorMsg = '';
+		$this->_cursor = mysql_query($sql, $this->_connection);
+
+		if (!$this->_cursor) {
+			$this->_errorNum = mysql_errno($this->_connection);
+			$this->_errorMsg = mysql_error($this->_connection)." SQL=$sql";
+
+			
+			return false;
+		}
+		return $this->_cursor;
 	}
 	public function nameQuote($s)
 	{
@@ -48,38 +139,8 @@ class dbAccess {
 			return true;
 		}
 	}
-	/**
-	 * 
-	 * Set a database query for execution
-	 * @param $query String Query to be executed
-	 */
-	function setQuery( $sql, $offset = 0, $limit = 0)
-	{
-		$this->_sql		= $sql;
-		$this->_limit	= (int) $limit;
-		$this->_offset	= (int) $offset;
-	}
-	public function query()
-	{
-		if (!is_resource($this->_connection)) {
-			return false;
-		}
-
-		// Take a local copy so that we don't modify the original query and cause issues later
-		$sql = $this->replacePrefix((string) $this->_sql);
-		if ($this->_limit > 0 || $this->_offset > 0) {
-			$sql .= ' LIMIT '.$this->_offset.', '.$this->_limit;
-		}
-		$this->_cursor = mysql_query($sql, $this->_connection);
-
-		if (!$this->_cursor) {
-			$this->_errorNum = mysql_errno($this->_connection);
-			$this->_errorMsg = mysql_error($this->_connection)." SQL=$sql";
-
-			return false;
-		}
-		return $this->_cursor;
-	}
+	
+	
 /**
 	 * This method loads the first field of the first row returned by the query.
 	 *

@@ -31,8 +31,7 @@ class Container {
 	 */
 	static function getContainer($name = 'default') {
 		$db = dbAccess::getInstance();
-		$db->setQuery('SELECT '.$db->nameQuote('id').' FROM '.$db->nameQuote('containers')
-						.' WHERE '.$db->nameQuote('name').' = '.$name); 
+		$db->setQuery("SELECT id FROM containers WHERE name = '{$name}'"); 
 		$id = $db->loadResult();
 		return new Container($id, $name); 
 	}
@@ -44,7 +43,7 @@ class Container {
 	 */
 	function getContainerUsers() {
 		$db = dbAccess::getInstance();
-		$db->setQuery('SELECT id FROM users WHERE container = '.$this->name);
+		$db->setQuery("SELECT id FROM users WHERE container = '{$this->name}'");
 		$users = $db->loadResultArray();
 		return $users;
 	}

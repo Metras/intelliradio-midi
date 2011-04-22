@@ -114,8 +114,9 @@ if($_GET['loginAttempt']==true) {
 	$username = $_POST['username'];
 	$password = md5($_POST['password']);
 	$db = dbAccess::getInstance();
-	$db->setQuery('SELECT id,password,container FROM users WHERE name='.$username);
+	$db->setQuery("SELECT id,password,container FROM users WHERE name='{$username}'");
 	if ( is_null($result = $db->loadAssoc()) ) {
+		echo print_r($db);
 		echo "<p>Error: Username does not exist.</p>";
 	}
 	else {

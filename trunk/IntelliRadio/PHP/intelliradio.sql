@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 20, 2011 at 10:51 PM
+-- Generation Time: Apr 22, 2011 at 03:02 PM
 -- Server version: 5.1.49
 -- PHP Version: 5.3.3-1ubuntu9.3
 
@@ -90,9 +90,11 @@ CREATE TABLE IF NOT EXISTS `users` (
   `container` varchar(100) NOT NULL COMMENT 'Id of the container',
   `user_ip` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `users`
 --
 
+INSERT INTO `users` (`id`, `name`, `password`, `container`, `user_ip`) VALUES
+(1, 'ramindu', '81dc9bdb52d04dc20036dbd8313ed055', 'default', '192.168.1.1');
