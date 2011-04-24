@@ -32,6 +32,8 @@ function login() {
 		 				."</script>";
 			}
 		}
+		
 	   
 	}
+	return true;
 }
