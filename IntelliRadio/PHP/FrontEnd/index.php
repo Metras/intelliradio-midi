@@ -1,5 +1,8 @@
 <?php session_start(); 
-require_once('../includes/include_functions.inc');?>
+require_once('../includes/include_functions.inc');
+require_once '../includes/include_user.inc';
+$user = unserialize($_SESSION['iuser']); 
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US" xml:lang="en">
 <head>
@@ -38,8 +41,18 @@ require_once('../includes/include_functions.inc');?>
                 			<a href="index.php?page=home" class="active"><span class="l"></span><span class="r"></span><span class="t">Home</span></a>
                 		</li>
                 		<li>
-                			<a href="index.php?page=login"><span class="l"></span><span class="r"></span><span class="t">Login</span></a>
+                			<a href="<?php if ( !$user )
+                							echo 'index.php?page=login';
+                						   else 
+                						   	echo 'index.php?page=logout';?>"><span class="l"></span><span class="r"></span><span class="t">
+                						   	<?php if ( !$user )
+                									echo 'Login';
+                						   		  else 
+                						   			echo 'Logout';?></span></a>
                 			
+                		</li>
+                		<li>
+                			<a href="index.php?page=request&container=all"><span class="l"></span><span class="r"></span><span class="t">Request</span></a>
                 		</li>		
                 		<li>
                 			<a href="index.php?page=about"><span class="l"></span><span class="r"></span><span class="t">About IntelliRadio</span></a>
@@ -76,11 +89,8 @@ require_once('../includes/include_functions.inc');?>
                                                             	<li>
                                                             		<a href="index.php?page=home"><span class="l"></span><span class="r"></span><span class="t">Home</span></a>
                                                             	</li>
-                                                            	<li>
-                                                            		<a href="index.php?page=fb"><span class="l"></span><span class="r"></span><span class="t">Facebook</span></a>
-                                                            			</li>
                                                             	<li class="active">
-                                                            		<a class="active" href="index.php?page=request"><span class="l"></span><span class="r"></span><span class="t">Request a track</span></a>
+                                                            		<a class="active" href="index.php?page=request&container=all"><span class="l"></span><span class="r"></span><span class="t">Request a track</span></a>
                                                             	</li>
                                                             </ul>
                                             <!-- /block-content -->
@@ -110,22 +120,39 @@ require_once('../includes/include_functions.inc');?>
                                                 <div class="art-blockcontent-cc"></div>
                                                 <div class="art-blockcontent-body">
                                             <!-- block-content --><center>
-<object id="myMovie" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="150" height="36">
-<?php if ( is_null($_SESSION['iuser']) ) { ?>
-<param name="src" value="rtsp://localhost/broadcast/live.3gp">
-<?php } else { 
-$user = $_SESSION['iuser'];
-$container = $user->container;
-?>
-<param name="src" value="rtsp://localhost/broadcast/<?php echo $container?>.3gp">
-<?php } ?>
-<param name="console" value="video2">
-<param name="controls" value="ControlPanel">
-<param name="autostart" value="false">
-<param name="loop" value="false">
-<embed name="myMovie" src="http://localhost/ramgen/broadcast/live.3gp?embed" height="36" width="150" autostart="false" loop="false" nojava="true" console="video2" controls="ControlPanel"></embed>
-<noembed><a href="http://realmedia.uic.edu/ramgen/itltv/bbtips.6feb02.smi">Play second clip</a></noembed>
-</object></center>
+ 	<object id="myMovie" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="150" height="36">
+	<?php if ( is_null($_SESSION['iuser']) ) { ?>
+	<param name="src" value="rtsp://192.168.1.6/broadcast/default.3gp">
+	<?php } else { 
+			$user = unserialize($_SESSION['iuser']);
+			$container = $user->container;
+	
+			echo "<param name=\"src\" value=\"rtsp://192.168.1.6/broadcast/".$user->container.".3gp\">";
+			
+			}
+	 ?>
+	<param name="console" value="video2">
+	<param name="controls" value="ControlPanel">
+	<param name="autostart" value="true">
+	<param name="loop" value="false">
+	<?php if ( is_null($_SESSION['iuser']) ) { ?>
+	<embed name="myMovie" src="http://192.168.1.6/ramgen/broadcast/default.3gp?embed" height="36" width="150" autostart="true" loop="false" nojava="true" console="video2" controls="ControlPanel"></embed>
+	<?php } else { 
+			$user = unserialize($_SESSION['iuser']);
+			$container = $user->container;
+	
+	echo "<embed name=\"myMovie\" src=\"http://192.168.1.6/ramgen/broadcast/".$user->container.".3gp?embed\" height=\"36\" width=\"150\" autostart=\"true\" loop=\"false\" nojava=\"true\" console=\"video2\" controls=\"ControlPanel\"></embed>";
+	} ?> 
+</object></center> 
+<!--<object id="myMovie" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="150" height="36">
+	<param name="src" value="rtsp://localhost/broadcast/default.3gp">
+	<param name="console" value="video2">
+	<param name="controls" value="ControlPanel">
+	<param name="autostart" value="true">
+	<param name="loop" value="false">
+	<embed name="myMovie" src="http://192.168.1.6/ramgen/broadcast/default.3gp?embed" height="36" width="150" autostart="true" loop="false" nojava="true" console="video2" controls="ControlPanel"></embed>
+	<noembed><a href="http://realmedia.uic.edu/ramgen/itltv/bbtips.6feb02.smi">Play second clip</a></noembed>
+</object></center> -->
                                             <!-- /block-content -->
                                             
                                             		<div class="cleared"></div>
@@ -155,8 +182,9 @@ $container = $user->container;
                                             <!-- block-content -->
                                                             <div>
                                                                               <ul>
-                                                                               <li><a href="#">ROCK</a></li>
-                                                                               <li><a href="#">Classical</a></li>
+                                                                              	<li><a href="index.php?page=request&container=all">All</a></li>
+                                                                               <li><a href="index.php?page=request&container=rock">Rock</a></li>
+                                                                               <li><a href="index.php?page=request&container=classical">Classical</a></li>
                                    
                                                                                </ul>
                                                                               
@@ -216,16 +244,27 @@ $container = $user->container;
                                                     <img src="images/postheadericon.png" width="26" height="26" alt="postheadericon" />
                                                     <?php echo 'Welcome!'; ?>
                                                 </h2>
+                                                <?php if ( $user ) {
+                                                	echo '<p>You are currently listening to the '.strtoupper($user->container).' container</p>';
+                                                }
+                                                ?>
                                             </div>
                                             <div class="art-postcontent">
                                                 <?php 
-                                                	$namesAndPages = array('login' 	=> 'login.php',
+                                                	if ( $_GET['page'] != '' ) {
+                                                		$namesAndPages = array('login' 	=> 'login.php',
                                                 						   'about' 	=> 'about.php',
                                                 						   'fb'    	=> 'fb.php',
                                                 						   'home'  	=> 'dummy.php',
                                                 						   'logout'	=> 'logout.php',
-                                                						   'request'=> 'request.php');
-                                                	midiInclude($_GET['page'], $namesAndPages);
+                                                						   'request'=> 'request.php',
+                                                						   'register'=> 'register.php');
+                                                		midiInclude($_GET['page'], $namesAndPages);
+                                                	}
+                                                	
+                                                	$user = unserialize($_SESSION['iuser']);
+                                                	
+                                                	
                                                 ?>
                                                 
                                                 
@@ -238,14 +277,14 @@ $container = $user->container;
                             </div>
                             <div class="art-post">
                                 <div class="art-post-body">
-                            <div class="art-post-inner art-article">
+                            <!-- <div class="art-post-inner art-article">
                                             <div class="art-postmetadataheader">
                                                 <h2 class="art-postheader">
                                                     <img src="images/postheadericon.png" width="26" height="26" alt="postheadericon" />
                                                     Search 
                                                 </h2>
                                             </div>
-                                            <div class="art-postcontent">
+                                            <div class="art-postcontent">-->
                                                 
                                                     
                                                 <!-- /article-content -->

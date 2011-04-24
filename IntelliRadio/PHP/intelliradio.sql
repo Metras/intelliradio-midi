@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.7deb5build0.10.10.1
+-- version 3.2.4
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 22, 2011 at 03:02 PM
--- Server version: 5.1.49
--- PHP Version: 5.3.3-1ubuntu9.3
+-- Generation Time: Apr 24, 2011 at 08:25 PM
+-- Server version: 5.1.41
+-- PHP Version: 5.3.1
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `containers` (
   `name` varchar(40) NOT NULL,
   `current_users` int(10) NOT NULL COMMENT 'The number of users who currently belong to this container',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `containers`
@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS `containers` (
 
 INSERT INTO `containers` (`id`, `name`, `current_users`) VALUES
 (1, 'default', 0),
-(2, 'rock', 0);
+(2, 'rock', 0),
+(3, 'classical', 0);
 
 -- --------------------------------------------------------
 
@@ -51,13 +52,21 @@ CREATE TABLE IF NOT EXISTS `tracks` (
   `name` varchar(100) NOT NULL,
   `artist` varchar(100) NOT NULL,
   `container` varchar(50) NOT NULL,
+  `filename` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `tracks`
 --
 
+INSERT INTO `tracks` (`id`, `name`, `artist`, `container`, `filename`) VALUES
+(1, 'Mal Mitak', 'Kasun Kalhara', 'classical', 'mal_mitak-kasun_kalhara.3gp'),
+(2, 'Sonduru Sithuwam', 'Kasun Kalhara', 'classical', 'sonduru_situwam-kasun_kalhara.3gp'),
+(5, 'Chakithaya', 'Nemesis', 'default', 'chakithaya-nemesis.3gp'),
+(6, 'Sonduriye', 'Amarasiri Peiris', 'default', 'sonduriye-amarasiri_peris.3gp'),
+(7, 'New Divide', 'Linkin Park', 'rock', 'new_divide-linkin_park.3gp'),
+(8, 'No More Sorrow', 'Linkin Park', 'rock', 'no_more_sorrow-linkin_park.3gp');
 
 -- --------------------------------------------------------
 
@@ -66,16 +75,23 @@ CREATE TABLE IF NOT EXISTS `tracks` (
 --
 
 CREATE TABLE IF NOT EXISTS `track_requests` (
+  `request_id` int(10) NOT NULL AUTO_INCREMENT,
   `track_id` int(10) NOT NULL,
   `user_id` int(10) NOT NULL,
-  `container_id` int(10) NOT NULL,
-  PRIMARY KEY (`track_id`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `container` varchar(50) NOT NULL,
+  PRIMARY KEY (`request_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `track_requests`
 --
 
+INSERT INTO `track_requests` (`request_id`, `track_id`, `user_id`, `container`) VALUES
+(1, 1, 1, 'rock'),
+(2, 3, 1, 'classical'),
+(3, 4, 1, 'classical'),
+(4, 3, 1, 'classical'),
+(5, 3, 1, 'classical');
 
 -- --------------------------------------------------------
 
@@ -90,11 +106,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `container` varchar(100) NOT NULL COMMENT 'Id of the container',
   `user_ip` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `password`, `container`, `user_ip`) VALUES
-(1, 'ramindu', '81dc9bdb52d04dc20036dbd8313ed055', 'default', '192.168.1.1');
+(1, 'ramindu', '81dc9bdb52d04dc20036dbd8313ed055', 'rock', '192.168.1.1'),
+(2, 'thusira', 'bf1b05493c27f5bf307a28dcc6593fb9', 'rock', '192.168.1.1'),
+(3, 'dilan', '99c5e07b4d5de9d18c350cdf64c5aa3d', 'default', '192.168.1.1');
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
