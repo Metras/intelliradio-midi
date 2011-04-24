@@ -53,17 +53,43 @@ class Container {
 	 * @param $user User User object to switch to the container
 	 * @return Boolean whether the user switch was successful
 	 */
-	function switchUserContainter($user) {
+	function switchUserContainer($user) {
 		$user->container = $this->name;
 		$db = dbAccess::getInstance();
-		$userToDb = new stdClass();
+		/*$userToDb = new stdClass();
 		$userToDb->id = $user->id;
 		$userToDb->name = $user->name;
 		$userToDb->container = $user->container;
 		$userToDb->user_ip = $user->user_ip;
-		$db->updateObject('users', $userToDb, 'id');
-		$db->setQuery('UPDATE containers SET current_users=current_users+1 WHERE id='.$this->id);
+		$db->updateObject('users', $userToDb, 'id');*/
+		$db->setQuery("UPDATE users SET container='{$this->name}' WHERE id='{$user->id}'");
+		$ret = $db->loadResult();
+		$db->setQuery("UPDATE containers SET current_users=current_users+1 WHERE id='{$this->id}'");
 		return $db->loadResult();
+	}
+	/**
+	 * 
+	 * Takes a container name and loads the names of the tracks in the container as an array
+	 * @param String $container name of the container which needs to be checked
+	 */
+	static function getContainerTracks($container = 'default') {
+		$db = dbAccess::getInstance();
+		$db->setQuery("SELECT id,name,artist FROM tracks where container='{$container}'");
+		$tracks = $db->loadAssocList();
+		if ( $tracks[0]['id'] == '' ) {
+			echo '<p>Sorry, currently, the '.strtoupper($container).' container is empty.</p>';
+		}
+		else {
+			echo "<div border=\"1\">" 
+				."<table width=\"90%\" border=\"0\" style=\"border:0px\">"
+				."<form name=\"requestForm\" method=\"POST\" action=\"index.php?page=request&submitted=true&container=".$container."\">";
+			foreach($tracks as $t) {
+				echo "<tr><td>".$t['name']." - ".$t['artist']."</td><td><input type=\"radio\" name=\"track\" value=\"".$t['id']."\"></td></tr>";
+			}
+			echo "<tr><td colspan=\"2\"><input type=\"submit\" value=\"Request\" /></td></tr>";
+			echo "</form></table></div>";
+		}
+		
 	}
 	
 	

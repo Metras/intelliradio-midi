@@ -121,6 +121,36 @@ class dbAccess {
 		}
 		return $this->_cursor;
 	}
+	/**
+	 * Get a quoted database escaped string
+	 *
+	 * @param	string	A string
+	 * @param	boolean	Default true to escape string, false to leave the string unchanged
+	 * @return	string
+	 */
+	public function quote($text, $escaped = true)
+	{
+		return '\''.($escaped ? $this->getEscaped($text) : $text).'\'';
+	}
+	/**
+	 * Get a database escaped string
+	 *
+	 * @param	string	The string to be escaped
+	 * @param	boolean	Optional parameter to provide extra escaping
+	 * @return	string
+	 */
+	public function getEscaped($text, $extra = false)
+	{
+		$result = mysql_real_escape_string($text, $this->_connection);
+		if ($extra) {
+			$result = addcslashes($result, '%_');
+		}
+		return $result;
+	}
+	public function insertid()
+	{
+		return mysql_insert_id($this->_connection);
+	}
 	public function nameQuote($s)
 	{
 		$q = $this->_nameQuote;
@@ -141,7 +171,7 @@ class dbAccess {
 	}
 	
 	
-/**
+	/**
 	 * This method loads the first field of the first row returned by the query.
 	 *
 	 * @return	mixed	The value returned in the query or null if the query failed.
