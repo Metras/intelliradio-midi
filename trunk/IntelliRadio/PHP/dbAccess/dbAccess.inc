@@ -10,7 +10,7 @@ class dbAccess {
 	protected static $dParams = array(
 						'host' 		=> 'localhost',
 						'user' 		=> 'root',
-						'password' 	=> 'rami',
+						'password' 	=> '',
 						'database'	=> 'intelliradio'
 					);
 
