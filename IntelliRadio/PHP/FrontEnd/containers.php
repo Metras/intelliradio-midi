@@ -76,6 +76,7 @@ class Container {
 		$db = dbAccess::getInstance();
 		$db->setQuery("SELECT id,name,artist FROM tracks where container='{$container}'");
 		$tracks = $db->loadAssocList();
+		echo '<h4>'.strtoupper($container).' container</h4>';
 		if ( $tracks[0]['id'] == '' ) {
 			echo '<p>Sorry, currently, the '.strtoupper($container).' container is empty.</p>';
 		}
@@ -89,6 +90,7 @@ class Container {
 			echo "<tr><td colspan=\"2\"><input type=\"submit\" value=\"Request\" /></td></tr>";
 			echo "</form></table></div>";
 		}
+		return true;
 		
 	}
 	
