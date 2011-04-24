@@ -80,7 +80,7 @@ require_once('../includes/include_functions.inc');?>
                                                             		<a href="index.php?page=fb"><span class="l"></span><span class="r"></span><span class="t">Facebook</span></a>
                                                             			</li>
                                                             	<li class="active">
-                                                            		<a class="active" href="index.php?page=login"><span class="l"></span><span class="r"></span><span class="t">Search</span></a>
+                                                            		<a class="active" href="index.php?page=request"><span class="l"></span><span class="r"></span><span class="t">Request a track</span></a>
                                                             	</li>
                                                             </ul>
                                             <!-- /block-content -->
@@ -111,7 +111,14 @@ require_once('../includes/include_functions.inc');?>
                                                 <div class="art-blockcontent-body">
                                             <!-- block-content --><center>
 <object id="myMovie" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA" width="150" height="36">
+<?php if ( is_null($_SESSION['iuser']) ) { ?>
 <param name="src" value="rtsp://localhost/broadcast/live.3gp">
+<?php } else { 
+$user = $_SESSION['iuser'];
+$container = $user->container;
+?>
+<param name="src" value="rtsp://localhost/broadcast/<?php echo $container?>.3gp">
+<?php } ?>
 <param name="console" value="video2">
 <param name="controls" value="ControlPanel">
 <param name="autostart" value="false">
@@ -150,10 +157,7 @@ require_once('../includes/include_functions.inc');?>
                                                                               <ul>
                                                                                <li><a href="#">ROCK</a></li>
                                                                                <li><a href="#">Classical</a></li>
-                                                                               <li><a href="#">Jazz</a></li>
-                                                                               <li><a href="#">70's</a></li>
-                                                                               <li><a href="#">Black Metal</a></li>
-                                                                               <li><a href="#">Blues</a></li>
+                                   
                                                                                </ul>
                                                                               
                                                                                                                                                             </div>
@@ -215,10 +219,12 @@ require_once('../includes/include_functions.inc');?>
                                             </div>
                                             <div class="art-postcontent">
                                                 <?php 
-                                                	$namesAndPages = array('login' => 'login.php',
-                                                						   'about' => 'about.php',
-                                                						   'fb'    => 'fb.php',
-                                                						   'home'  => 'dummy.php');
+                                                	$namesAndPages = array('login' 	=> 'login.php',
+                                                						   'about' 	=> 'about.php',
+                                                						   'fb'    	=> 'fb.php',
+                                                						   'home'  	=> 'dummy.php',
+                                                						   'logout'	=> 'logout.php',
+                                                						   'request'=> 'request.php');
                                                 	midiInclude($_GET['page'], $namesAndPages);
                                                 ?>
                                                 
