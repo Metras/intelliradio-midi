@@ -1,5 +1,6 @@
 <?php
 require_once('../includes/include_db.inc');
+require_once('loginchecker.php');
 /**
  * 
  * @desc Class to create request object for each request
@@ -45,22 +46,18 @@ class Request {
 	 * Send updated container playlist to server
 	 */
 	function sendRequest() {
-		define(HOST, '192.168.1.1');
-		define(PORT, '3998');
+		define(HOST,'localhost');
+		define(PORT,2004);
+		$timeout = 50;
+		$request = $this->track_name.','.$this->container_name;
+		$requestSocket = fsockopen($host,$port,$errnum,$errstr,$timeout);
+		if ( !is_resource($requestSocket) ) {
+		    exit("Could not connect to send data to server! ".$errnum." ".$errstr);
+		} else {
+		    fputs($requestSocket, $request);
+		}
+		fclose($requestSocket);
 		
-		set_time_limit(0);
-		$requestStream = $this->container_name.','.$this->track_name;
-		if ( !$requestSocket = socket_create(AF_INET, SOCK_STREAM, 0) ) {
-			echo '<p>Error: Could not create socket!</p>';
-		} 
-		if ( !socket_bind($socket, HOST, PORT) ) {
-			echo '<p>Error: Could not bind to port!</p>';
-		}
-		if ( !socket_write($requestSocket, $requestStream, strlen ($requestStream))) {
-			echo '<p>Error: Could not write request to socket!</p>';
-		}
-
-		socket_close($requestSocket);
 	}
 	/**
 	 * 

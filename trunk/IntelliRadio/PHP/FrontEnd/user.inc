@@ -52,6 +52,8 @@ class User {
 		$userToDb->container = $container;
 		$userToDb->user_ip = $this->user_ip;
 		dbAccess::getInstance()->updateObject('users', $userToDb, 'id');
+		$db->setQuery("UPDATE containers SET current_users=current_users+1 WHERE name='{$container}'");
+		return $db->loadResult();
 		
 	}
 	

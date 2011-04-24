@@ -3,8 +3,9 @@
 require_once('../includes/include_user.inc');
 require_once 'facebook.php';
 require_once('../includes/include_db.inc');
+require_once '../includes/include_links.inc';
 
-$user = $_SESSION['user'];
+$user = $_SESSION['iuser'];
 $loginParam = $user; 
 // Create our Application instance (replace this with your appId and secret).
 		$facebook = new Facebook(array(
@@ -74,10 +75,10 @@ $loginParam = $user;
             <a href="index.php?page=register">New to IntelliRadio? Register Here.</a><br/>
             <!--<iframe src="fb.php" height="100" width="50%"></iframe>-->
 			
-			<?php if ($me){ ?>
+			<?php if ($me): ?>
 		    <p>You are logged in through Facebook as <?php echo $me['name']; 
 		    $user = User::instantiateUser($me['id'], $me['name'], 'default',$_SERVER['REMOTE_ADDR']); 
-		    $_SESSION['user'] = $user;
+		    $_SESSION['iuser'] = $user;
 		    $db = &dbAccess::getInstance();
 		    $db->setQuery('SELECT name FROM users WHERE userId = '.$user->id);
 		    if ( !($container = $db->loadResult()) ) {
@@ -94,18 +95,18 @@ $loginParam = $user;
 	    	<a href="<?php echo $loginUrl; ?>">
 			<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif" />
 			</a>
-	    <?php } else { ?>
+	    <?php else : ?>
 	      	<div>
 			<a href="<?php echo $loginUrl; ?>">
 			<img src="http://static.ak.fbcdn.net/rsrc.php/zB6N8/hash/4li2k73z.gif">
 			</a>
 			</div>
-	    <?php } ?>
+	    <?php endif ?>
 	
 	    <div id="fb-root"></div>
 
 <?php } else {
-		echo "</p>You are already logged in as ".$user->name."</p>";
+		echo '</p>You are already logged in as '.$_SESSION['iuser']->name.'.'.LOGOUT_LINK.'</p>';
 	}?>
 
 <?php
@@ -117,16 +118,17 @@ if($_GET['loginAttempt']==true) {
 	$db->setQuery("SELECT id,password,container FROM users WHERE name='{$username}'");
 	if ( is_null($result = $db->loadAssoc()) ) {
 		echo print_r($db);
-		echo "<p>Error: Username does not exist.</p>";
+		echo '<p>Error: Username does not exist</p>';
 	}
 	else {
 		if ( $result['password'] != $password ) {
-			echo "<p>Error: Incorrect password.</p>";
+			echo '<p>Error: Incorrect password.</p>';
 		}
 		else {
 			$user = User::instantiateUser($result['id'], $username, $result['container'], $_SERVER['REMOTE_ADDR']);
-			$_SESSION['user'] = $user;
-			echo "<p>Welcome back, ".$user->name."</p>";
+			$_SESSION['iuser'] = $user;
+			//echo $_SESSION['iuser']->name;
+			echo '<p>Welcome back, '.$user->name.' Click here to '.LOGOUT_LINK.'</p>';
 		}
 	}
    
